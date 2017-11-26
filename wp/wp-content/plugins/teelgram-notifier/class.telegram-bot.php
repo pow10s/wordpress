@@ -320,7 +320,7 @@ class Telegram_Bot
             $pluginUrl = plugins_url('teelgram-notifier/bot.php');
             print_r($pluginUrl);
             try {
-                $this->api->setWebhook('https://telegram-notifier.herokuapp.com/wp/wp-content/plugins/teelgram-notifier/bot.php');
+                $this->api->setWebhook($pluginUrl);
             } catch (\TelegramBot\Api\Exception $e) {
                 echo $e->getMessage();
             }

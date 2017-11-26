@@ -33,7 +33,7 @@ if (is_admin()) {
     $my_settings_page = new Telegram_Menu();
     $bot_send_msg = new Telegram_Bot();
 }
-$bot = new \TelegramBot\Api\Client($this->options['bot_token']);
+$bot = new \TelegramBot\Api\Client('438332110:AAFCgeVIz_vq6HJznmLqbvTcxbZ0v4lCEzY');
 //Handling commands from the user
 $bot->command('start', function ($message) use ($bot) {
     $text = 'Hello, thank`s for subscribing. Commands list: /help';

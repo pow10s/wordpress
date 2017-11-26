@@ -319,7 +319,7 @@ class Telegram_Bot
         if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'telegram-settings') {
             $pluginUrl = plugins_url('telegram-notifier/telegram-notifier.php');
             try {
-                $this->api->setWebhook('https://desolate-crag-11963.herokuapp.com/bot.php');
+                $this->api->setWebhook($pluginUrl);
             } catch (\TelegramBot\Api\Exception $e) {
                 echo $e->getMessage();
             }

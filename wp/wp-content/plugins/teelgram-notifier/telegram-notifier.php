@@ -31,7 +31,14 @@ if (is_admin()) {
     register_activation_hook(__FILE__, [$db, 'create_table']);
     register_deactivation_hook(__FILE__, [$db, 'delete_table']);
     $my_settings_page = new Telegram_Menu();
+    $bot_send_msg = new Telegram_Bot();
 }
-$bot_send_msg = new Telegram_Bot();
-$bot_send_msg->webhook_chat_command_responce();
+$bot = new \TelegramBot\Api\Client($this->options['bot_token']);
+//Handling commands from the user
+$bot->command('start', function ($message) use ($bot) {
+    $text = 'Hello, thank`s for subscribing. Commands list: /help';
+    $bot->sendMessage($message->getChat()->getId(), $text);
+    $bot->run();
+});
+
 

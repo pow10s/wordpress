@@ -1,15 +1,8 @@
 {
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:stosdima/teelgram-notifier.git"
-    }
-  ],
   "require": {
     "php": ">=5.4",
     "johnpbloch/wordpress": "4.9",
-    "composer/installers": "~1.0",
-    "stosdima/teelgram-notifier": "dev-master"
+    "composer/installers": "~1.0"
   },
   "extra": {
     "wordpress-install-dir": "wp",

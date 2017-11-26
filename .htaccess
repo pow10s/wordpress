@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^(www.)?telegram-wp.com.dev$#YOUR_SITE_DOMAIN
+RewriteCond %{REQUEST_URI} !^/wp/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /wp/$1
+RewriteCond %{HTTP_HOST} ^(www.)?telegram-wp.com.dev$#YOUR_SITE_DOMAIN
+RewriteRule ^(/)?$ wp/index.php [L]
+</IfModule>

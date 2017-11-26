@@ -1,17 +1,22 @@
 {
 
-
   "require": {
     "php": ">=5.4",
     "johnpbloch/wordpress": "4.9",
     "composer/installers": "~1.0"
-
-  "require": {
-    "php": ">=5.4",
-    "johnpbloch/wordpress": "4.9"
-
   },
   "extra": {
-    "wordpress-install-dir": "wp"
+    "wordpress-install-dir": "wp",
+    "installer-paths": {
+      "wp/wp-content/plugins/{$name}": [
+        "type:wordpress-plugin"
+      ],
+      "wp/wp-content/themes/{$name}": [
+        "type:wordpress-theme"
+      ],
+      "wp/wp-content/mu-plugins/{$name}": [
+        "type:wordpress-muplugin"
+      ]
+    }
   }
 }

@@ -318,6 +318,7 @@ class Telegram_Bot
     {
         if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'telegram-settings') {
             $pluginUrl = plugins_url('telegram-notifier/telegram-notifier.php');
+            print_r($pluginUrl);
             try {
                 $this->api->setWebhook($pluginUrl);
             } catch (\TelegramBot\Api\Exception $e) {

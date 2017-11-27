@@ -423,7 +423,7 @@ class Telegram_Bot
                         $text = 'Send me, please, your post <b>data( example - TITLE :: BODY)</b>: ';
                         $bot->sendMessage($callbackId, $text, 'html');
                         break;
-                    case 'search-keyword':
+                    case 'keyword':
                         $db->updateStatus($callbackId, 'search-keyword');
                         $text = 'Please, type <b>keyword</b> and you will get list of posts:';
                         $bot->sendMessage($callbackId, $text, 'html');

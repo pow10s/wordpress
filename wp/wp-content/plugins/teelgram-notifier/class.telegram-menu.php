@@ -5,14 +5,24 @@
  */
 class Telegram_Menu
 {
+    /**
+     * Init options
+     * @var $options
+     */
     private $options;
 
+    /**
+     * Telegram_Menu constructor.
+     */
     public function __construct()
     {
         add_action('admin_menu', [$this, 'add_plugin_page']);
         add_action('admin_init', [$this, 'page_init']);
     }
 
+    /**
+     * Adding plugin page
+     */
     public function add_plugin_page()
     {
         add_menu_page(
@@ -25,6 +35,9 @@ class Telegram_Menu
         );
     }
 
+    /**
+     * Creating plugin admin page page
+     */
     public function create_admin_page()
     {
         $this->options = get_option('telegram_bot_options');
@@ -51,6 +64,9 @@ class Telegram_Menu
         <?php
     }
 
+    /**
+     * Init plugin page
+     */
     public function page_init()
     {
         register_setting(
@@ -82,6 +98,11 @@ class Telegram_Menu
         );
     }
 
+    /**
+     * Sanitize users input
+     * @param $input
+     * @return array
+     */
     public function sanitize($input)
     {
         $new_input = [];
@@ -94,18 +115,23 @@ class Telegram_Menu
         return $new_input;
     }
 
+    /**
+     * Print section information and errors
+     */
     public function print_section_info()
     {
         print 'Enter your settings below: ';
         global $error;
-        if ( $error->get_error_code() ) {
+        if ( $error && $error->get_error_code() ) {
             foreach( $error->get_error_messages() as $errr ){
-                echo '<div><strong>Ошибка</strong>:'. $errr .'</div>';
+                echo '<div><strong>Error:</strong>:'. $errr .'</div>';
             }
         }
-
     }
 
+    /**
+     * Bot token input callback function
+     */
     public function bot_token_callback()
     {
         printf(
@@ -114,6 +140,9 @@ class Telegram_Menu
         );
     }
 
+    /**
+     * Verification code input callback function
+     */
     public function verif_code_callback()
     {
         $helper = new Helper();

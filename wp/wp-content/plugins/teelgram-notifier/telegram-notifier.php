@@ -22,11 +22,13 @@ if (!function_exists('add_action')) {
 }
 require_once($_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php');
 require_once(TELEGRAM_NOTIFIER_PLUGIN_DIR . 'class.helper.php');
+require_once(TELEGRAM_NOTIFIER_PLUGIN_DIR . 'class.telegram-bot.php');
 require_once(TELEGRAM_NOTIFIER_PLUGIN_DIR . 'class.telegram-menu.php');
 require_once(TELEGRAM_NOTIFIER_PLUGIN_DIR . 'class.telegram-db.php');
-require_once(TELEGRAM_NOTIFIER_PLUGIN_DIR . 'class.telegram-bot.php');
+
 
 if (is_admin()) {
+    global $error;
     $db = new Telegram_Db();
     register_activation_hook(__FILE__, [$db, 'create_table']);
     register_deactivation_hook(__FILE__, [$db, 'delete_table']);

@@ -28,17 +28,21 @@ class Telegram_Bot
      * Telegram_Bot constructor.*
      * <code>$this->options</code> getting options from wordpress
      * <code>$this->api</code> adding TelegramBot object
-     * <code>$this->db </code> adding Database object
      */
     public function __construct()
     {
         $this->options = get_option('telegram_bot_options');
-        $this->api = new TelegramBot\Api\BotApi($this->options['bot_token']);
-        add_action('draft_to_publish', [$this, 'send_post_to_telegram_users']);
-        if ($_SERVER["SERVER_ADDR"] == '127.0.0.1' || !is_ssl()) {
-            add_action('init', [$this, 'long_poll_chat_commands_responce']);
-        } else {
-            add_action('init', [$this, 'setWebhook']);
+        if ($this->options['bot_token']) {
+            $this->api = new TelegramBot\Api\BotApi($this->options['bot_token']);
+            add_action('draft_to_publish', [$this, 'send_post_to_telegram_users']);
+            if ($_SERVER["SERVER_ADDR"] == '127.0.0.1' || !is_ssl()) {
+                add_action('init', [$this, 'long_poll_chat_commands_responce']);
+            } else {
+                add_action('init', [$this, 'setWebhook']);
+            }
+        }else {
+            global $error;
+            $error = new WP_Error('option_empty', 'BOT_TOKEN cant be empty');
         }
     }
 

@@ -466,6 +466,7 @@ class Telegram_Bot
             });
             //processing response to a message using the current status of the user in the database
             $bot->on(function (\TelegramBot\Api\Types\Update $update) use ($bot, $helper, $db) {
+                //getting params from webhook updates
                 $message = $update->getMessage();
                 $userText = $message->getText();
                 $chat_id = $message->getChat()->getId();

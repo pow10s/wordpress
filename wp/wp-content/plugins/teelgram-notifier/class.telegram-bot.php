@@ -46,6 +46,7 @@ class Telegram_Bot
             add_action('init', [$this, 'long_poll_chat_commands_responce']);
         } else {
             add_action('init', [$this, 'setWebhook']);
+            add_action('init', [$this, 'webhook_chat_command_responce']);
         }
     }
 
@@ -317,7 +318,7 @@ class Telegram_Bot
     public function setWebhook()
     {
         if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'telegram-settings') {
-            $pluginUrl = plugins_url('teelgram-notifier/telegram-notifier.php');
+            $pluginUrl = plugins_url('teelgram-notifier/class.telegram-bot.php');
             print_r($pluginUrl);
             try {
                 $this->api->setWebhook($pluginUrl);
@@ -335,6 +336,20 @@ class Telegram_Bot
     public function webhook_chat_command_responce()
     {
         try {
+            $bot = new \TelegramBot\Api\Client($this->options['bot_token']);
+            $bot->command('devanswer', function ($message) use ($bot) {
+                preg_match_all('/{"text":"(.*?)",/s', file_get_contents('http://devanswers.ru/'), $result);
+                $bot->sendMessage($message->getChat()->getId(),
+                    str_replace("<br/>", "\n", json_decode('"' . $result[1][0] . '"')));
+            });
+            $bot->command('qaanswer', function ($message) use ($bot) {
+                $bot->sendMessage($message->getChat()->getId(), file_get_contents('http://qaanswers.ru/qwe.php'));
+            });
+            $bot->run();
+        } catch (\TelegramBot\Api\Exception $e) {
+            $e->getMessage();
+        }
+/*        try {
             $bot = new \TelegramBot\Api\Client($this->options['bot_token']);
             $helper = new Helper();
             //Handling commands from the user
@@ -395,10 +410,157 @@ class Telegram_Bot
                 $text = 'You have been deleted from bot database. If you want start again, please, send me /start';
                 $bot->sendMessage($message->getChat()->getId(), $text);
             });
-
+            //processing of button presses
+            $bot->callbackQuery(function (\TelegramBot\Api\Types\CallbackQuery $callbackQuery) use ($bot, $helper) {
+                $callbackId = $callbackQuery->getFrom()->getId();
+                switch ($callbackQuery->getData()) {
+                    case 'categories':
+                        $helper = new Helper();
+                        if ($helper->get_categories_buttons_list()) {
+                            $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup($helper->get_categories_buttons_list());
+                            $this->db->updateStatus($callbackId, 'search-categories');
+                            $text = 'List of categories: ';
+                            $bot->sendMessage($callbackId, $text, null, false, null, $keyboard);
+                        } else {
+                            $this->db->resetStatus($callbackId);
+                            $text = 'At that moment you haven`t created categories ';
+                            $bot->sendMessage($callbackId, $text, null, false, null, null);
+                        }
+                        break;
+                    case 'login':
+                        $this->db->updateStatus($callbackId, 'admin-verif');
+                        $text = 'Insert <b>verification code</b> from your site: ';
+                        $bot->sendMessage($callbackId, $text, 'html');
+                        break;
+                    case 'post-create':
+                        $this->db->updateStatus($callbackId, 'admin-post');
+                        $text = 'Send me, please, your post <b>data( example - TITLE :: BODY)</b>: ';
+                        $bot->sendMessage($callbackId, $text, 'html');
+                        break;
+                    case 'search-keyword':
+                        $this->db->updateStatus($callbackId, 'search-keyword');
+                        $text = 'Please, type <b>keyword</b> and you will get list of posts:';
+                        $bot->sendMessage($callbackId, $text, 'html');
+                        break;
+                    case 'post-delete':
+                        $posts = get_posts(['numberposts' => 0]);
+                        if ($posts) {
+                            $text = 'Please choose post ID which you want to delete from list below: ' . "\n";
+                            foreach ($posts as $post) {
+                                $text .= $helper->generate_telegram_post(get_permalink($post->ID), $post->post_title,
+                                        'ID -> ' . $post->ID) . "\n";
+                            }
+                            $this->db->updateStatus($callbackId, 'admin-post-delete');
+                            $bot->sendMessage($callbackId, $text, 'html');
+                        } else {
+                            $this->db->resetStatus($callbackId);
+                            $text = 'You havent created posts :(';
+                            $bot->sendMessage($callbackId, $text);
+                        }
+                        break;
+                    case 'statistic':
+                        $this->db->resetStatus($callbackId);
+                        $allusers = count($this->db->chatAll());
+                        $text = 'Current users: ' . $allusers;
+                        $bot->sendMessage($callbackId, $text);
+                        break;
+                }
+                foreach (get_categories() as $category) {
+                    if ($callbackQuery->getData() == $category->term_id) {
+                        $posts = get_posts(['category' => $category->term_id]);
+                        $text = '';
+                        if ($posts) {
+                            foreach ($posts as $post) {
+                                $text .= $helper->generate_telegram_post(get_permalink($post->ID), $post->post_title,
+                                        $post->post_content) . "\n";
+                            }
+                            $bot->sendMessage($callbackId, $text, 'html');
+                            $this->db->resetStatus($callbackId);
+                        } else {
+                            $text = 'There are no posts in this category';
+                            $bot->sendMessage($callbackId, $text);
+                        }
+                    }
+                }
+            });
+            //processing response to a message using the current status of the user in the database
+            $bot->on(function (\TelegramBot\Api\Types\Message $message) use ($bot, $helper) {
+                $status = $this->db->getStatus($message->getChat()->getId());
+                if ($status) {
+                    switch ($status[0]->status) {
+                        case 'admin-verif':
+                            if ($this->options['verif_code'] == $message->getText()) {
+                                $text = 'Yo are logged in. Thanks!';
+                                $this->db->updateAdmin($message->getChat()->getId());
+                                $this->db->resetStatus($message->getChat()->getId());
+                                $bot->sendMessage($message->getChat()->getId(), $text);
+                            } else {
+                                $text = 'Incorrect verification code. Please re-type: ';
+                                $bot->sendMessage($message->getChat()->getId(), $text);
+                            }
+                            break;
+                        case 'admin-post':
+                            $postContent = explode('::', $message->getText());
+                            if (count($postContent) == 2) {
+                                $postData = [
+                                    'post_status' => 'publish',
+                                    'post_author' => 1,
+                                    'post_title' => $postContent[0],
+                                    'post_content' => $postContent[1],
+                                ];
+                                $text = 'You are awesome! <b>Post was created</b>';
+                                $bot->sendMessage($message->getChat()->getId(), $text, 'html');
+                                $newPost = wp_insert_post($postData);
+                                foreach ($this->db->chatAll() as $id) {
+                                    $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup(
+                                        [
+                                            [
+                                                ['text' => 'Show at the site', 'url' => get_permalink($newPost)]
+                                            ]
+                                        ]
+                                    );
+                                    $text = $helper->generate_telegram_post(get_permalink($postData['ID']),
+                                        $postData['post_title'], $postData['post_content']);
+                                    $bot->sendMessage($id->chat_id, $text, 'html', false, null, $keyboard);
+                                }
+                                $this->db->updateStatus($message->getChat()->getId(), 'start');
+                            } else {
+                                $text = 'Incorrect delimiter, please re-type <b>data( example - TITLE :: BODY)</b>';
+                                $bot->sendMessage($message->getChat()->getId(), $text, 'html');
+                            }
+                            break;
+                        case 'admin-post-delete':
+                            if (wp_delete_post($message->getText())) {
+                                $text = 'Post was deleted.';
+                                $bot->sendMessage($message->getChat()->getId(), $text);
+                                $this->db->resetStatus($message->getChat()->getId());
+                            } else {
+                                $text = 'Error. Please re-type Post ID:';
+                                $bot->sendMessage($message->getChat()->getId(), $text);
+                            }
+                            break;
+                        case 'search-keyword':
+                            $posts = $this->db->searchByKeyword($message->getText());
+                            if ($posts) {
+                                $text = '';
+                                foreach ($posts as $post) {
+                                    $text .= $helper->generate_telegram_post(get_permalink($post->ID),
+                                            $post->post_title, $post->post_content) . "\n";
+                                }
+                                $bot->sendMessage($message->getChat()->getId(), $text, 'html', false, null);
+                                $this->db->resetStatus($message->getChat()->getId());
+                            } else {
+                                $text = 'The search did not give a result.';
+                                $bot->sendMessage($message->getChat()->getId(), $text);
+                                $this->db->resetStatus($message->getChat()->getId());
+                            }
+                            break;
+                    }
+                }
+            });
             $bot->run();
         } catch (\TelegramBot\Api\Exception $e) {
             $e->getMessage();
-        }
+        }*/
     }
 }

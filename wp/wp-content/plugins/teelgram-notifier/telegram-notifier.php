@@ -31,7 +31,6 @@ if (is_admin()) {
     register_activation_hook(__FILE__, [$db, 'create_table']);
     register_deactivation_hook(__FILE__, [$db, 'delete_table']);
     $my_settings_page = new Telegram_Menu();
+    $bot_send_msg = new Telegram_Bot();
 }
-$bot_send_msg = new Telegram_Bot();
-$bot_send_msg->webhook_chat_command_responce();
 

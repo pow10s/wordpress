@@ -470,9 +470,15 @@ class Telegram_Bot
                 }
             });
             //processing response to a message using the current status of the user in the database
-            $bot->run();
-            $bot->on(function (\TelegramBot\Api\Types\Message $message) use ($bot, $helper, $db) {
-                $status = $db->getStatus($message->getChat()->getId());
+            $bot->on(function (\TelegramBot\Api\Types\Update $update) use ($bot, $helper, $db) {
+                $message = $update->getMessage();
+                $text = $message->getText();
+                $chat_id = $message->getChat()->getId();
+                if ($text == 'hello') {
+                    $bot->sendMessage($chat_id, 'hi, human');
+                }
+
+/*                $status = $db->getStatus($message->getChat()->getId());
                 if ($status) {
                     switch ($status[0]->status) {
                         case 'admin-verif':
@@ -543,7 +549,9 @@ class Telegram_Bot
                             }
                             break;
                     }
-                }
+                }*/
+            }, function ($update){
+                return true;
             });
             $bot->run();
         } catch (\TelegramBot\Api\Exception $e) {

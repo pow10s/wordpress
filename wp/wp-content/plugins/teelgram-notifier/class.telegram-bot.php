@@ -339,12 +339,12 @@ class Telegram_Bot
             $helper = new Helper();
             //Handling commands from the user
             $bot->command('start', function ($message) use ($bot) {
-                $this->db->addContact($message->getChat()->getId());
-                $this->db->resetStatus($message->getChat()->getId());
+/*                $this->db->addContact($message->getChat()->getId());
+                $this->db->resetStatus($message->getChat()->getId());*/
                 $text = 'Hello, thank`s for subscribing. Commands list: /help';
                 $bot->sendMessage($message->getChat()->getId(), $text);
             });
-            $bot->command('help', function ($message) use ($bot) {
+/*            $bot->command('help', function ($message) use ($bot) {
                 $commandList = 'List of commands:
                          /start - start work with bot
                          /stop - stop work with bot
@@ -395,7 +395,7 @@ class Telegram_Bot
                 $text = 'You have been deleted from bot database. If you want start again, please, send me /start';
                 $bot->sendMessage($message->getChat()->getId(), $text);
             });
-/*            //processing of button presses
+            //processing of button presses
             $bot->callbackQuery(function (\TelegramBot\Api\Types\CallbackQuery $callbackQuery) use ($bot, $helper) {
                 $callbackId = $callbackQuery->getFrom()->getId();
                 switch ($callbackQuery->getData()) {

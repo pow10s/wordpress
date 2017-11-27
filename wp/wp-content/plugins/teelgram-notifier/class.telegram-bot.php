@@ -32,7 +32,7 @@ class Telegram_Bot
     public function __construct()
     {
         $this->options = get_option('telegram_bot_options');
-        if ($this->options['bot_token'] && $this->options['bot_token'] !== '') {
+        if ($this->options['bot_token'] && $this->options['bot_token'] != '') {
             $this->api = new TelegramBot\Api\BotApi($this->options['bot_token']);
             add_action('draft_to_publish', [$this, 'send_post_to_telegram_users']);
             if ($_SERVER["SERVER_ADDR"] == '127.0.0.1' || !is_ssl()) {

@@ -317,8 +317,7 @@ class Telegram_Bot
             }
             $response = $this->api->getUpdates($this->offset, 60);
         } catch (\TelegramBot\Api\Exception $e) {
-            global $error;
-            $error->add('long_polling_error', $e->getMessage());
+            echo $e->getMessage();
         }
     }
 
@@ -332,8 +331,7 @@ class Telegram_Bot
             try {
                 $this->api->setWebhook($pluginUrl);
             } catch (\TelegramBot\Api\Exception $e) {
-                global $error;
-                $error->add('webhook_error', $e->getMessage());
+                 $e->getMessage();
             }
         }
     }
@@ -564,8 +562,7 @@ class Telegram_Bot
             $bot->run();
             }
         } catch (\TelegramBot\Api\Exception $e) {
-            global $error;
-            $error->add('webhook_commands_error', $e->getMessage());
+            $e->getMessage();
         }
     }
 }

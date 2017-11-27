@@ -121,12 +121,6 @@ class Telegram_Menu
     public function print_section_info()
     {
         print 'Enter your settings below: ';
-        global $error;
-/*        if ( $error && $error->get_error_code() ) {
-            foreach( $error->get_error_messages() as $errr ){
-                echo '<div><strong>Error:</strong>:'. $errr .'</div>';
-            }
-        }*/
     }
 
     /**

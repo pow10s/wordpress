@@ -50,9 +50,6 @@ class Telegram_Bot
             } else {
                 add_action('init', [$this, 'setWebhook']);
             }
-        }else {
-            global $error;
-            $error = new WP_Error('option_empty', 'BOT_TOKEN cant be empty');
         }
     }
 

@@ -122,11 +122,11 @@ class Telegram_Menu
     {
         print 'Enter your settings below: ';
         global $error;
-        if ( $error && $error->get_error_code() ) {
+/*        if ( $error && $error->get_error_code() ) {
             foreach( $error->get_error_messages() as $errr ){
                 echo '<div><strong>Error:</strong>:'. $errr .'</div>';
             }
-        }
+        }*/
     }
 
     /**

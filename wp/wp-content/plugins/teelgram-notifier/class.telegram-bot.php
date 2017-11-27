@@ -336,20 +336,6 @@ class Telegram_Bot
     {
         try {
             $bot = new \TelegramBot\Api\Client($this->options['bot_token']);
-            $bot->command('devanswer', function ($message) use ($bot) {
-                preg_match_all('/{"text":"(.*?)",/s', file_get_contents('http://devanswers.ru/'), $result);
-                $bot->sendMessage($message->getChat()->getId(),
-                    str_replace("<br/>", "\n", json_decode('"' . $result[1][0] . '"')));
-            });
-            $bot->command('qaanswer', function ($message) use ($bot) {
-                $bot->sendMessage($message->getChat()->getId(), file_get_contents('http://qaanswers.ru/qwe.php'));
-            });
-            $bot->run();
-        } catch (\TelegramBot\Api\Exception $e) {
-            $e->getMessage();
-        }
-/*        try {
-            $bot = new \TelegramBot\Api\Client($this->options['bot_token']);
             $helper = new Helper();
             //Handling commands from the user
             $bot->command('start', function ($message) use ($bot) {
@@ -560,6 +546,6 @@ class Telegram_Bot
             $bot->run();
         } catch (\TelegramBot\Api\Exception $e) {
             $e->getMessage();
-        }*/
+        }
     }
 }

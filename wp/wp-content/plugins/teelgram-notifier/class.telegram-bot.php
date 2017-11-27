@@ -395,7 +395,7 @@ class Telegram_Bot
                 $text = 'You have been deleted from bot database. If you want start again, please, send me /start';
                 $bot->sendMessage($message->getChat()->getId(), $text);
             });
-            //processing of button presses
+/*            //processing of button presses
             $bot->callbackQuery(function (\TelegramBot\Api\Types\CallbackQuery $callbackQuery) use ($bot, $helper) {
                 $callbackId = $callbackQuery->getFrom()->getId();
                 switch ($callbackQuery->getData()) {
@@ -542,7 +542,7 @@ class Telegram_Bot
                             break;
                     }
                 }
-            });
+            });*/
             $bot->run();
         } catch (\TelegramBot\Api\Exception $e) {
             $e->getMessage();

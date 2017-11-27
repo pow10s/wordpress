@@ -488,7 +488,7 @@ class Telegram_Bot
                                 $bot->sendMessage($chat_id, $text);
                             }
                             break;
-/*                        case 'admin-post':
+                        case 'admin-post':
                             $postContent = explode('::', $userText);
                             if (count($postContent) == 2) {
                                 $postData = [
@@ -508,42 +508,41 @@ class Telegram_Bot
                                             ]
                                         ]
                                     );
-                                    $text = $helper->generate_telegram_post(get_permalink($postData['ID']),
-                                        $postData['post_title'], $postData['post_content']);
+                                    $text = $helper->generate_telegram_post(get_permalink($postData['ID']), $postData['post_title'], $postData['post_content']);
                                     $bot->sendMessage($id->chat_id, $text, 'html', false, null, $keyboard);
                                 }
-                                $db->updateStatus($message->getChat()->getId(), 'start');
+                                $db->updateStatus($chat_id, 'start');
                             } else {
                                 $text = 'Incorrect delimiter, please re-type <b>data( example - TITLE :: BODY)</b>';
-                                $bot->sendMessage($message->getChat()->getId(), $text, 'html');
+                                $bot->sendMessage($chat_id, $text, 'html');
                             }
                             break;
                         case 'admin-post-delete':
-                            if (wp_delete_post($message->getText())) {
+                            if (wp_delete_post($userText)) {
                                 $text = 'Post was deleted.';
-                                $bot->sendMessage($message->getChat()->getId(), $text);
-                                $db->resetStatus($message->getChat()->getId());
+                                $bot->sendMessage($chat_id, $text);
+                                $db->resetStatus($chat_id);
                             } else {
                                 $text = 'Error. Please re-type Post ID:';
-                                $bot->sendMessage($message->getChat()->getId(), $text);
+                                $bot->sendMessage($chat_id, $text);
                             }
                             break;
                         case 'search-keyword':
-                            $posts = $db->searchByKeyword($message->getText());
+                            $posts = $db->searchByKeyword($userText);
                             if ($posts) {
                                 $text = '';
                                 foreach ($posts as $post) {
                                     $text .= $helper->generate_telegram_post(get_permalink($post->ID),
                                             $post->post_title, $post->post_content) . "\n";
                                 }
-                                $bot->sendMessage($message->getChat()->getId(), $text, 'html', false, null);
-                                $db->resetStatus($message->getChat()->getId());
+                                $bot->sendMessage($chat_id, $text, 'html', false, null);
+                                $db->resetStatus($chat_id);
                             } else {
                                 $text = 'The search did not give a result.';
-                                $bot->sendMessage($message->getChat()->getId(), $text);
-                                $db->resetStatus($message->getChat()->getId());
+                                $bot->sendMessage($chat_id, $text);
+                                $db->resetStatus($chat_id);
                             }
-                            break;*/
+                            break;
                     }
                 }
             }, function ($update){

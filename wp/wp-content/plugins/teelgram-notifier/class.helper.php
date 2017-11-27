@@ -7,7 +7,7 @@ class Helper
 {
     /**
      * Transform categories list in keyboard for telegram bot
-     * @return array $keyboard
+     * @return array|bool $keyboard
      */
     public function get_categories_buttons_list()
     {

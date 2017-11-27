@@ -99,8 +99,8 @@ class Telegram_Menu
         print 'Enter your settings below: ';
         global $error;
         if ( $error->get_error_code() ) {
-            foreach( $error->get_error_messages() as $err ){
-                echo '<div><strong>Ошибка</strong>:'. $err .'</div>';
+            foreach( $error->get_error_messages() as $errr ){
+                echo '<div><strong>Ошибка</strong>:'. $errr .'</div>';
             }
         }
 

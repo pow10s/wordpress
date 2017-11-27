@@ -472,28 +472,24 @@ class Telegram_Bot
             //processing response to a message using the current status of the user in the database
             $bot->on(function (\TelegramBot\Api\Types\Update $update) use ($bot, $helper, $db) {
                 $message = $update->getMessage();
-                $text = $message->getText();
+                $userText = $message->getText();
                 $chat_id = $message->getChat()->getId();
-                if ($text == 'hello') {
-                    $bot->sendMessage($chat_id, 'hi, human');
-                }
-
-/*                $status = $db->getStatus($message->getChat()->getId());
-                if ($status) {
+                $status = $db->getStatus($chat_id);
+                if($status) {
                     switch ($status[0]->status) {
                         case 'admin-verif':
-                            if ($this->options['verif_code'] == $message->getText()) {
+                            if ($this->options['verif_code'] == $userText) {
                                 $text = 'Yo are logged in. Thanks!';
-                                $db->updateAdmin($message->getChat()->getId());
-                                $db->resetStatus($message->getChat()->getId());
-                                $bot->sendMessage($message->getChat()->getId(), $text);
+                                $db->updateAdmin($chat_id);
+                                $db->resetStatus($chat_id);
+                                $bot->sendMessage($chat_id, $text);
                             } else {
                                 $text = 'Incorrect verification code. Please re-type: ';
-                                $bot->sendMessage($message->getChat()->getId(), $text);
+                                $bot->sendMessage($chat_id, $text);
                             }
                             break;
-                        case 'admin-post':
-                            $postContent = explode('::', $message->getText());
+/*                        case 'admin-post':
+                            $postContent = explode('::', $userText);
                             if (count($postContent) == 2) {
                                 $postData = [
                                     'post_status' => 'publish',
@@ -502,7 +498,7 @@ class Telegram_Bot
                                     'post_content' => $postContent[1],
                                 ];
                                 $text = 'You are awesome! <b>Post was created</b>';
-                                $bot->sendMessage($message->getChat()->getId(), $text, 'html');
+                                $bot->sendMessage($chat_id, $text, 'html');
                                 $newPost = wp_insert_post($postData);
                                 foreach ($db->chatAll() as $id) {
                                     $keyboard = new \TelegramBot\Api\Types\Inline\InlineKeyboardMarkup(
@@ -547,9 +543,9 @@ class Telegram_Bot
                                 $bot->sendMessage($message->getChat()->getId(), $text);
                                 $db->resetStatus($message->getChat()->getId());
                             }
-                            break;
+                            break;*/
                     }
-                }*/
+                }
             }, function ($update){
                 return true;
             });

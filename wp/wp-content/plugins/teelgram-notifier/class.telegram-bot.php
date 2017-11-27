@@ -565,7 +565,7 @@ class Telegram_Bot
             }
         } catch (\TelegramBot\Api\Exception $e) {
             global $error;
-            $error->add('webhook_error', $e->getMessage());
+            $error->add('webhook_commands_error', $e->getMessage());
         }
     }
 }

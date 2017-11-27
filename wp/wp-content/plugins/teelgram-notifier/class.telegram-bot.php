@@ -8,32 +8,42 @@ class Telegram_Bot
 {
     /**
      * Init options from wordpress database
-     * @var $options
+     * @var array $options
      */
     private $options;
 
     /**
      * Init offset for long polling method
-     * @var $offset
+     * @var int $offset
      */
     private $offset;
 
     /**
      * Init TelegamBot API SDK
-     * @var $api
+     * @var object $api
+     * @see \TelegramBot\Api\BotApi
      */
     private $api;
+
+    /**
+     * Init TelegramBot Api Client
+     * @var object $client
+     * @see \TelegramBot\Api\Client
+     */
+    private $client;
 
     /**
      * Telegram_Bot constructor.*
      * <code>$this->options</code> getting options from wordpress
      * <code>$this->api</code> adding TelegramBot object
+     * <code>$this->client</code> adding TelegramBot Client object
      */
     public function __construct()
     {
         $this->options = get_option('telegram_bot_options');
         if (isset($this->options['bot_token']) && array_key_exists('bot_token', $this->options)) {
             $this->api = new TelegramBot\Api\BotApi($this->options['bot_token']);
+            $this->client = new \TelegramBot\Api\Client($this->options['bot_token']);
             add_action('draft_to_publish', [$this, 'send_post_to_telegram_users']);
             if ($_SERVER["SERVER_ADDR"] == '127.0.0.1' || !is_ssl()) {
                 add_action('init', [$this, 'long_poll_chat_commands_responce']);
@@ -74,7 +84,7 @@ class Telegram_Bot
      * Long polling techology for sites with disabled SSL(may used on localhost environment) @link https://core.telegram.org/bots/api#getupdates
      * Processing users messages coming from Telegram application(Every step writes in database)
      * Getting updates from Telegram Bot API <code>$this->api->getUpdates() </code>
-     * @see BotApi
+     * @see \TelegramBot\Api\BotApi
      */
     public function long_poll_chat_commands_responce()
     {
@@ -329,12 +339,12 @@ class Telegram_Bot
     /**
      * Webhook technology for for sites with enabled SSL. Can`t be used on localhost environment
      * Processing users messages coming from Telegram application
-     * @see Client
+     * @see \TelegramBot\Api\Client
      */
     public function webhook_chat_command_responce()
     {
         try {
-            $bot = new \TelegramBot\Api\Client($this->options['bot_token']);
+            $bot = $this->client;
             $db = new Telegram_Db();
             $helper = new Helper();
             //Handling commands from the user

@@ -46,7 +46,6 @@ class Telegram_Bot
             add_action('init', [$this, 'long_poll_chat_commands_responce']);
         } else {
             add_action('init', [$this, 'setWebhook']);
-            add_action('init', [$this, 'webhook_chat_command_responce']);
         }
     }
 
@@ -318,7 +317,7 @@ class Telegram_Bot
     public function setWebhook()
     {
         if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'telegram-settings') {
-            $pluginUrl = plugins_url('teelgram-notifier/class.telegram-bot.php');
+            $pluginUrl = plugins_url('teelgram-notifier/telegram-notifier.php');
             print_r($pluginUrl);
             try {
                 $this->api->setWebhook($pluginUrl);

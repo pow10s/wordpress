@@ -345,6 +345,7 @@ class Telegram_Bot
     {
         try {
             $bot = $this->client;
+            if($bot){
             $db = new Telegram_Db();
             $helper = new Helper();
             //Handling commands from the user
@@ -559,6 +560,7 @@ class Telegram_Bot
                 return true;
             });
             $bot->run();
+            }
         } catch (\TelegramBot\Api\Exception $e) {
             $e->getMessage();
         }

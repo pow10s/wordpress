@@ -470,6 +470,7 @@ class Telegram_Bot
                 }
             });
             //processing response to a message using the current status of the user in the database
+            $bot->run();
             $bot->on(function (\TelegramBot\Api\Types\Message $message) use ($bot, $helper, $db) {
                 $status = $db->getStatus($message->getChat()->getId());
                 if ($status) {

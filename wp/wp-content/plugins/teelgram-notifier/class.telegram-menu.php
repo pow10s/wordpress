@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Telegram_Menu Class
  * @version 0.1.0
@@ -45,10 +46,16 @@ class Telegram_Menu
             echo '<div class="notice notice-error is-dismissible">
             <p>' . __('Warning: the WebHooks is not working while you are in a localhost environment or SSL not active.') . '</p>
             </div>';
-        }else {
-            echo '<div class="notice notice-success is-dismissible">
-            <p>' . __('Webhook active') . '</p>
+        } else {
+            if (isset($this->options['bot_token']) && array_key_exists('bot_token', $this->options)) {
+                echo '<div class="notice notice-success is-dismissible">
+            <p>' . __('Webhook initialized. Press enable button after saving token') . '</p>
+            <form method="post" action="">
+                <input name="webhook_enabled" value="Enable" type="submit">
+                <input name="webhook_disabled" value="Disable" type="submit">
+            </form>
             </div>';
+            }
         }
         ?>
         <div class="wrap">
@@ -58,6 +65,7 @@ class Telegram_Menu
                 settings_fields('telegram_bot_option_group');
                 do_settings_sections('telegram-setting-admin');
                 submit_button();
+                submit_button('test');
                 ?>
             </form>
         </div>

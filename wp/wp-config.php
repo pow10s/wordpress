@@ -19,16 +19,16 @@
  */
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define('DB_NAME', 'heroku_c4487506aff22f2');
+define('DB_NAME', 'wordpress'); //heroku_c4487506aff22f2
 
 /** MySQL database username */
-define('DB_USER', 'bfd846ea43de28');
+define('DB_USER', 'root'); //bfd846ea43de28
 
 /** MySQL database password */
-define('DB_PASSWORD', 'c558d5a1');
+define('DB_PASSWORD', ''); //c558d5a1
 
 /** MySQL hostname */
-define('DB_HOST', 'us-cdbr-iron-east-05.cleardb.net');
+define('DB_HOST', 'localhost'); //us-cdbr-iron-east-05.cleardb.net
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');

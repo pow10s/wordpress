@@ -42,19 +42,19 @@ class Telegram_Menu
     public function create_admin_page()
     {
         $this->options = get_option('telegram_bot_options');
-        if ($_SERVER["SERVER_ADDR"] == '127.0.0.1' || !is_ssl()) {
-            echo '<div class="notice notice-error is-dismissible">
-            <p>' . __('Warning: the WebHooks is not working while you are in a localhost environment or SSL not active.') . '</p>
-            </div>';
-        } else {
-            if (isset($this->options['bot_token']) && array_key_exists('bot_token', $this->options)) {
+        if (isset($this->options['bot_token']) && array_key_exists('bot_token', $this->options)) {
+            if ($_SERVER["SERVER_ADDR"] == '127.0.0.1' || !is_ssl()) {
+                echo '<div class="notice notice-error is-dismissible">
+                     <p>' . __('Warning: the WebHooks is not working while you are in a localhost environment or SSL not active.') . '</p>
+                     </div>';
+            } else {
                 echo '<div class="notice notice-success is-dismissible">
-            <p>' . __('Webhook initialized. Press enable button after saving token') . '</p>
-            <form method="post" action="">
-                <input name="webhook_enabled" value="Enable" type="submit">
-                <input name="webhook_disabled" value="Disable" type="submit">
-            </form>
-            </div>';
+                        <p>' . __('Webhook initialized.') . '</p>
+                        <form method="post" action="">
+                            <input name="webhook_enabled" value="Enable" type="submit">
+                            <input name="webhook_disabled" value="Disable" type="submit">
+                        </form>
+                      </div>';
             }
         }
         ?>
@@ -65,7 +65,6 @@ class Telegram_Menu
                 settings_fields('telegram_bot_option_group');
                 do_settings_sections('telegram-setting-admin');
                 submit_button();
-                submit_button('test');
                 ?>
             </form>
         </div>
